@@ -247,7 +247,8 @@
                     <StackPanel>
                         <TextBlock Text="OPERACION" Style="{StaticResource SectionCaptionStyle}" />
 
-                        <Button Style="{StaticResource NavButtonStyle}">
+                        <Button Style="{StaticResource NavButtonStyle}"
+                                Command="{Binding MostrarPuntoVentaCommand}">
                             <DockPanel>
                                 <TextBlock Text="&#xE7F4;" Style="{StaticResource IconTextStyle}" />
                                 <TextBlock Text="Punto de Venta"
@@ -259,7 +260,9 @@
                             </DockPanel>
                         </Button>
 
-                        <Button Style="{StaticResource NavButtonActiveStyle}" Margin="0,6,0,0">
+                        <Button Style="{StaticResource NavButtonActiveStyle}"
+                                Margin="0,6,0,0"
+                                Command="{Binding MostrarComprasCommand}">
                             <DockPanel>
                                 <TextBlock Text="&#xE8C7;" Style="{StaticResource IconTextStyle}" />
                                 <TextBlock Text="Compras"
@@ -271,14 +274,17 @@
 
                         <TextBlock Text="CATALOGO" Style="{StaticResource SectionCaptionStyle}" />
 
-                        <Button Style="{StaticResource NavButtonStyle}">
+                        <Button Style="{StaticResource NavButtonStyle}"
+                                Command="{Binding MostrarProductosCommand}">
                             <DockPanel>
                                 <TextBlock Text="&#xE7B8;" Style="{StaticResource IconTextStyle}" />
                                 <TextBlock Text="Productos" Margin="12,0,0,0" VerticalAlignment="Center" />
                             </DockPanel>
                         </Button>
 
-                        <Button Style="{StaticResource NavButtonStyle}" Margin="0,6,0,0">
+                        <Button Style="{StaticResource NavButtonStyle}"
+                                Margin="0,6,0,0"
+                                Command="{Binding MostrarInventarioCommand}">
                             <DockPanel>
                                 <TextBlock Text="&#xE80A;" Style="{StaticResource IconTextStyle}" />
                                 <TextBlock Text="Inventario" Margin="12,0,0,0" VerticalAlignment="Center" />
@@ -308,7 +314,7 @@
                         <TextBlock Text="AN&#xC1;LISIS" Style="{StaticResource SectionCaptionStyle}" />
 
                         <Button Style="{StaticResource NavButtonStyle}"
-                                Click="AbrirReportes_Click">
+                                Command="{Binding MostrarReportesCommand}">
                             <DockPanel>
                                 <TextBlock Text="&#xE9D2;" Style="{StaticResource IconTextStyle}" />
                                 <TextBlock Text="Reportes" Margin="12,0,0,0" VerticalAlignment="Center" />

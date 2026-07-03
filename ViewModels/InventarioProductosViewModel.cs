@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PosLocal.Services;
+using PosLocal.Views;
 
 namespace PosLocal.ViewModels;
 
@@ -11,13 +12,16 @@ public sealed partial class InventarioProductosViewModel : ObservableObject
 {
     private readonly IInventarioService _inventarioService;
     private readonly IInventarioDialogService _dialogService;
+    private readonly IAppNavigationService _navigationService;
 
     public InventarioProductosViewModel(
         IInventarioService inventarioService,
-        IInventarioDialogService dialogService)
+        IInventarioDialogService dialogService,
+        IAppNavigationService navigationService)
     {
         _inventarioService = inventarioService;
         _dialogService = dialogService;
+        _navigationService = navigationService;
 
         Productos = new ObservableCollection<InventarioProductoItemViewModel>();
         TamañosPagina = new ObservableCollection<int> { 10, 25, 50, 100 };
@@ -30,6 +34,11 @@ public sealed partial class InventarioProductosViewModel : ObservableObject
         CambiarDisponibilidadCommand = new AsyncRelayCommand<InventarioProductoItemViewModel?>(CambiarDisponibilidadAsync, PuedeEditarProducto);
         AjustarStockCommand = new AsyncRelayCommand<InventarioProductoItemViewModel?>(AjustarStockAsync, PuedeEditarProducto);
         VerMovimientosCommand = new AsyncRelayCommand<InventarioProductoItemViewModel?>(VerMovimientosAsync, PuedeEditarProducto);
+        MostrarPuntoVentaCommand = new RelayCommand(_navigationService.NavigateTo<PuntoVentaView>);
+        MostrarComprasCommand = new RelayCommand(_navigationService.NavigateTo<ComprasView>);
+        MostrarProductosCommand = new RelayCommand(_navigationService.NavigateTo<ProductosView>);
+        MostrarInventarioCommand = new RelayCommand(_navigationService.NavigateTo<InventarioProductosView>);
+        MostrarReportesCommand = new RelayCommand(_navigationService.NavigateTo<ReportesView>);
     }
 
     public ObservableCollection<InventarioProductoItemViewModel> Productos { get; }
@@ -110,6 +119,16 @@ public sealed partial class InventarioProductosViewModel : ObservableObject
     public IAsyncRelayCommand<InventarioProductoItemViewModel?> AjustarStockCommand { get; }
 
     public IAsyncRelayCommand<InventarioProductoItemViewModel?> VerMovimientosCommand { get; }
+
+    public IRelayCommand MostrarPuntoVentaCommand { get; }
+
+    public IRelayCommand MostrarComprasCommand { get; }
+
+    public IRelayCommand MostrarProductosCommand { get; }
+
+    public IRelayCommand MostrarInventarioCommand { get; }
+
+    public IRelayCommand MostrarReportesCommand { get; }
 
     partial void OnTamanoPaginaChanged(int value)
     {

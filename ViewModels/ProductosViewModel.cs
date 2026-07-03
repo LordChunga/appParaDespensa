@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PosLocal.Services;
+using PosLocal.Views;
 
 namespace PosLocal.ViewModels;
 
@@ -11,13 +12,16 @@ public sealed partial class ProductosViewModel : ObservableObject
 {
     private readonly IProductoCatalogoService _productoService;
     private readonly IProductoCatalogoDialogService _dialogService;
+    private readonly IAppNavigationService _navigationService;
 
     public ProductosViewModel(
         IProductoCatalogoService productoService,
-        IProductoCatalogoDialogService dialogService)
+        IProductoCatalogoDialogService dialogService,
+        IAppNavigationService navigationService)
     {
         _productoService = productoService;
         _dialogService = dialogService;
+        _navigationService = navigationService;
 
         Productos = new ObservableCollection<ProductoCatalogoItemViewModel>();
         Categorias = new ObservableCollection<CategoriaCatalogoDto>();
@@ -35,6 +39,11 @@ public sealed partial class ProductosViewModel : ObservableObject
         NuevoComboCommand = new AsyncRelayCommand(NuevoComboAsync, PuedeEjecutarOperacion);
         AplicarFiltrosCommand = new AsyncRelayCommand(AplicarFiltrosAsync, PuedeEjecutarOperacion);
         LimpiarFiltrosCommand = new AsyncRelayCommand(LimpiarFiltrosAsync, PuedeEjecutarOperacion);
+        MostrarPuntoVentaCommand = new RelayCommand(_navigationService.NavigateTo<PuntoVentaView>);
+        MostrarComprasCommand = new RelayCommand(_navigationService.NavigateTo<ComprasView>);
+        MostrarProductosCommand = new RelayCommand(_navigationService.NavigateTo<ProductosView>);
+        MostrarInventarioCommand = new RelayCommand(_navigationService.NavigateTo<InventarioProductosView>);
+        MostrarReportesCommand = new RelayCommand(_navigationService.NavigateTo<ReportesView>);
     }
 
     public ObservableCollection<ProductoCatalogoItemViewModel> Productos { get; }
@@ -103,6 +112,16 @@ public sealed partial class ProductosViewModel : ObservableObject
     public IAsyncRelayCommand AplicarFiltrosCommand { get; }
 
     public IAsyncRelayCommand LimpiarFiltrosCommand { get; }
+
+    public IRelayCommand MostrarPuntoVentaCommand { get; }
+
+    public IRelayCommand MostrarComprasCommand { get; }
+
+    public IRelayCommand MostrarProductosCommand { get; }
+
+    public IRelayCommand MostrarInventarioCommand { get; }
+
+    public IRelayCommand MostrarReportesCommand { get; }
 
     private bool PuedeEjecutarOperacion()
     {

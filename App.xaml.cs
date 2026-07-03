@@ -26,6 +26,10 @@ public partial class App : Application
             .InitializeAsync()
             .GetAwaiter()
             .GetResult();
+        _serviceProvider.GetRequiredService<IDatabaseSeederService>()
+            .SeedAsync()
+            .GetAwaiter()
+            .GetResult();
 
         var mainWindow = _serviceProvider.GetRequiredService<PuntoVentaView>();
         MainWindow = mainWindow;
@@ -80,6 +84,8 @@ public partial class App : Application
         services.AddSingleton<IPosProductoService, PosProductoService>();
         services.AddSingleton<IPosVentaService, PosVentaService>();
         services.AddSingleton<IPosDialogService, PosDialogService>();
+        services.AddSingleton<IDatabaseSeederService, DatabaseSeederService>();
+        services.AddSingleton<IAppNavigationService, AppNavigationService>();
 
         services.AddSingleton<ICompraService, CompraService>();
         services.AddSingleton<ICompraDialogService, CompraDialogService>();

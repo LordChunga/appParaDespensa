@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using PosLocal.Services;
+using PosLocal.Views;
 
 namespace PosLocal.ViewModels;
 
@@ -13,14 +14,17 @@ public sealed partial class ReportesViewModel : ObservableObject
 {
     private readonly IReportesService _reportesService;
     private readonly IReportesDialogService _dialogService;
+    private readonly IAppNavigationService _navigationService;
     private bool _reloadRequested;
 
     public ReportesViewModel(
         IReportesService reportesService,
-        IReportesDialogService dialogService)
+        IReportesDialogService dialogService,
+        IAppNavigationService navigationService)
     {
         _reportesService = reportesService;
         _dialogService = dialogService;
+        _navigationService = navigationService;
 
         Kpis = new ObservableCollection<KpiReporteCardViewModel>();
         ResumenSecundario = new ObservableCollection<ResumenReporteCardViewModel>();
@@ -34,6 +38,11 @@ public sealed partial class ReportesViewModel : ObservableObject
         CargarReportesCommand = new AsyncRelayCommand(CargarReportesAsync);
         AplicarFiltrosCommand = new AsyncRelayCommand(CargarReportesAsync, PuedeEjecutarOperacion);
         ExportarReporteCommand = new AsyncRelayCommand(ExportarReporteAsync, PuedeEjecutarOperacion);
+        MostrarPuntoVentaCommand = new RelayCommand(_navigationService.NavigateTo<PuntoVentaView>);
+        MostrarComprasCommand = new RelayCommand(_navigationService.NavigateTo<ComprasView>);
+        MostrarProductosCommand = new RelayCommand(_navigationService.NavigateTo<ProductosView>);
+        MostrarInventarioCommand = new RelayCommand(_navigationService.NavigateTo<InventarioProductosView>);
+        MostrarReportesCommand = new RelayCommand(_navigationService.NavigateTo<ReportesView>);
 
         ResetVisualState();
     }
@@ -89,6 +98,16 @@ public sealed partial class ReportesViewModel : ObservableObject
     public IAsyncRelayCommand AplicarFiltrosCommand { get; }
 
     public IAsyncRelayCommand ExportarReporteCommand { get; }
+
+    public IRelayCommand MostrarPuntoVentaCommand { get; }
+
+    public IRelayCommand MostrarComprasCommand { get; }
+
+    public IRelayCommand MostrarProductosCommand { get; }
+
+    public IRelayCommand MostrarInventarioCommand { get; }
+
+    public IRelayCommand MostrarReportesCommand { get; }
 
     partial void OnFechaDesdeChanged(DateTime? value)
     {

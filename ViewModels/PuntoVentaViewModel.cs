@@ -6,6 +6,7 @@ using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PosLocal.Services;
+using PosLocal.Views;
 
 namespace PosLocal.ViewModels;
 
@@ -21,18 +22,21 @@ public sealed partial class PuntoVentaViewModel : ObservableObject
     private readonly IPosVentaService _ventaService;
     private readonly IPosDialogService _dialogService;
     private readonly IAppSettingsService _settingsService;
+    private readonly IAppNavigationService _navigationService;
     private DateTime _ultimoEnterUtc = DateTime.MinValue;
 
     public PuntoVentaViewModel(
         IPosProductoService productoService,
         IPosVentaService ventaService,
         IPosDialogService dialogService,
-        IAppSettingsService settingsService)
+        IAppSettingsService settingsService,
+        IAppNavigationService navigationService)
     {
         _productoService = productoService;
         _ventaService = ventaService;
         _dialogService = dialogService;
         _settingsService = settingsService;
+        _navigationService = navigationService;
 
         Clientes = new ObservableCollection<string> { "Consumidor Final" };
         Carrito = new ObservableCollection<CarritoVentaItemViewModel>();
@@ -57,6 +61,10 @@ public sealed partial class PuntoVentaViewModel : ObservableObject
         ProcesarVentaCommand = new AsyncRelayCommand(ProcesarVentaAsync, PuedeProcesarVenta);
         ProcesarDobleEnterCommand = new AsyncRelayCommand(ProcesarDobleEnterAsync);
         MostrarPuntoVentaCommand = new RelayCommand(() => SeccionActiva = SeccionPuntoVenta);
+        MostrarComprasCommand = new RelayCommand(_navigationService.NavigateTo<ComprasView>);
+        MostrarProductosCommand = new RelayCommand(_navigationService.NavigateTo<ProductosView>);
+        MostrarInventarioCommand = new RelayCommand(_navigationService.NavigateTo<InventarioProductosView>);
+        MostrarReportesCommand = new RelayCommand(_navigationService.NavigateTo<ReportesView>);
         MostrarTransferenciasCommand = new AsyncRelayCommand(MostrarTransferenciasAsync);
         MostrarSistemaCommand = new RelayCommand(() => SeccionActiva = SeccionSistema);
         AprobarTransferenciaCommand = new AsyncRelayCommand<TransferenciaPendienteItemViewModel>(AprobarTransferenciaAsync);
@@ -149,6 +157,14 @@ public sealed partial class PuntoVentaViewModel : ObservableObject
 
     public IRelayCommand MostrarPuntoVentaCommand { get; }
 
+    public IRelayCommand MostrarComprasCommand { get; }
+
+    public IRelayCommand MostrarProductosCommand { get; }
+
+    public IRelayCommand MostrarInventarioCommand { get; }
+
+    public IRelayCommand MostrarReportesCommand { get; }
+
     public IAsyncRelayCommand MostrarTransferenciasCommand { get; }
 
     public IRelayCommand MostrarSistemaCommand { get; }
@@ -228,6 +244,7 @@ public sealed partial class PuntoVentaViewModel : ObservableObject
 
             ProductoSeleccionado = producto;
             await AgregarProductoAlCarritoAsync(producto, cancellationToken);
+            TextoBusqueda = string.Empty;
         });
     }
 
@@ -278,14 +295,14 @@ public sealed partial class PuntoVentaViewModel : ObservableObject
                 return;
             }
 
-                Carrito.Add(new CarritoVentaItemViewModel
+            Carrito.Add(new CarritoVentaItemViewModel
             {
-                ProductoId = null,
-                Codigo = "MONTO",
+                ProductoId = SystemProductIds.ManualAmountProductId,
+                Codigo = SystemProductIds.ManualAmountCode,
                 CodigoBarras = null,
-                Nombre = "Monto manual",
+                Nombre = SystemProductIds.ManualAmountName,
                 UnidadMedida = "UN",
-                StockActual = 0m,
+                StockActual = 999999999m,
                 Cantidad = 1m,
                 PrecioUnitario = monto.Value
             });

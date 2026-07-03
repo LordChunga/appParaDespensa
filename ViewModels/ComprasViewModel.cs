@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PosLocal.Services;
+using PosLocal.Views;
 
 namespace PosLocal.ViewModels;
 
@@ -11,13 +12,16 @@ public sealed partial class ComprasViewModel : ObservableObject
 {
     private readonly ICompraService _compraService;
     private readonly ICompraDialogService _dialogService;
+    private readonly IAppNavigationService _navigationService;
 
     public ComprasViewModel(
         ICompraService compraService,
-        ICompraDialogService dialogService)
+        ICompraDialogService dialogService,
+        IAppNavigationService navigationService)
     {
         _compraService = compraService;
         _dialogService = dialogService;
+        _navigationService = navigationService;
 
         Compras = new ObservableCollection<CompraHistorialItemViewModel>();
 
@@ -30,6 +34,11 @@ public sealed partial class ComprasViewModel : ObservableObject
         PaginaAnteriorCommand = new AsyncRelayCommand(PaginaAnteriorAsync, PuedeIrPaginaAnterior);
         PaginaSiguienteCommand = new AsyncRelayCommand(PaginaSiguienteAsync, PuedeIrPaginaSiguiente);
         VerMovimientosInventarioCommand = new AsyncRelayCommand(VerMovimientosInventarioAsync, PuedeVerMovimientos);
+        MostrarPuntoVentaCommand = new RelayCommand(_navigationService.NavigateTo<PuntoVentaView>);
+        MostrarComprasCommand = new RelayCommand(_navigationService.NavigateTo<ComprasView>);
+        MostrarProductosCommand = new RelayCommand(_navigationService.NavigateTo<ProductosView>);
+        MostrarInventarioCommand = new RelayCommand(_navigationService.NavigateTo<InventarioProductosView>);
+        MostrarReportesCommand = new RelayCommand(_navigationService.NavigateTo<ReportesView>);
     }
 
     public ObservableCollection<CompraHistorialItemViewModel> Compras { get; }
@@ -114,6 +123,16 @@ public sealed partial class ComprasViewModel : ObservableObject
     public IAsyncRelayCommand PaginaSiguienteCommand { get; }
 
     public IAsyncRelayCommand VerMovimientosInventarioCommand { get; }
+
+    public IRelayCommand MostrarPuntoVentaCommand { get; }
+
+    public IRelayCommand MostrarComprasCommand { get; }
+
+    public IRelayCommand MostrarProductosCommand { get; }
+
+    public IRelayCommand MostrarInventarioCommand { get; }
+
+    public IRelayCommand MostrarReportesCommand { get; }
 
     private bool PuedeEjecutarOperacion()
     {

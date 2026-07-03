@@ -59,7 +59,8 @@ public sealed class PosVentaService : IPosVentaService
         {
             await InsertarDetalleAsync(connection, transaction, ventaId, item, cancellationToken);
 
-            if (item.ProductoId is not null)
+            if (item.ProductoId is not null
+                && item.ProductoId.Value != SystemProductIds.ManualAmountProductId)
             {
                 await DescontarProductoAsync(
                     connection,

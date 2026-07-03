@@ -1,21 +1,11 @@
 #nullable enable
 
-using System.Windows;
-
 namespace PosLocal.Views;
 
-public partial class ComprasView : Window
+public partial class ComprasView
 {
     public ComprasView()
     {
         InitializeComponent();
-    }
-
-    private void AbrirReportes_Click(object sender, RoutedEventArgs e)
-    {
-        if (Application.Current is App app)
-        {
-            app.NavigateTo<ReportesView>(this);
-        }
     }
 }
